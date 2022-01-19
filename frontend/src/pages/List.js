@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 export const List = (props) => {
 	const [data, setData] = useState([])
 	useEffect(() => {
-		axios.get(`${server_url}/items`)
+		axios.get(`${server_url}/catalogue/list`)
 			.then(res => {
 				setData(res.data)
 			})

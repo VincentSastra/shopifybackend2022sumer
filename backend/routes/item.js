@@ -10,22 +10,7 @@ const standardReply = (res, err, result) => {
   }
 }
 
-/* GET home page. */
-router.get('/items', async function (req, res) {
-  const connection = await pendingConnection
-  connection
-    .collection("items")
-    .find({}).limit(50)
-    .toArray(function (err, result) {
-      if (err) {
-        res.status(400).send("Error fetching listings!")
-      } else {
-        res.json(result)
-      }
-    })
-});
-
-router.get('/item/:id', async function (req, res) {
+router.get('/:id', async function (req, res) {
   console.log(req.params.id)
 
   const connection = await pendingConnection
@@ -41,7 +26,7 @@ router.get('/item/:id', async function (req, res) {
     })
 });
 
-router.put('/item/:id', async function (req, res) {
+router.put('/:id', async function (req, res) {
   const connection = await pendingConnection
   connection
     .collection("items")
@@ -55,7 +40,7 @@ router.put('/item/:id', async function (req, res) {
     }, (err, result) => standardReply(res, err, result))
 })
 
-router.patch('/item/:id', async function (req, res) {
+router.patch('/:id', async function (req, res) {
   console.log({
     name: req.params.id,
     label: req.body.labels,

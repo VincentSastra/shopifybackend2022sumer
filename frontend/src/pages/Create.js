@@ -19,7 +19,12 @@ export const Create = (props) => {
 				<br />
 				{err.response.data}
 			</div>)
-		})
+		}).then(res => {
+			setResponse(<div>
+				{res.message}
+				<br />
+				{res.response.data}
+			</div>)		})
 	}
 
 	return <div>
