@@ -13,6 +13,7 @@ let pendingConnection = client
 		console.log(e)
 	})
 	.then(db => {
+		db.db("inventory").collection("items").createIndex({ name: 1 }, {unique: true })
 		return db.db("inventory")
 	})
 
