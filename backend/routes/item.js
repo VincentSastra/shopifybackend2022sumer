@@ -14,12 +14,18 @@ router.get("/:id", async function (req, res) {
   const connection = await pendingConnection;
   connection
     .collection("items")
-    .find({ name: req.params.id })
+    .find({
+      name: req.params.id,
+      $or: [{ deleted: false }, { deleted: { $exists: false } }],
+    })
     .limit(1)
     .toArray(function (err, result) {
       if (err) {
         res.status(400).send("Error fetching listings!");
       } else {
+        if (result.length === 0) {
+          res.status(404).send(`No item with named ${req.params.id} exists`);
+        }
         res.json(result[0]);
       }
     });
@@ -49,20 +55,6 @@ router.patch("/:id", async function (req, res) {
         label: req.body.labels,
         category: req.body.category,
         inventory: req.body.inventory,
-      },
-    },
-    (err, result) => standardReply(res, err, result)
-  );
-});
-
-router.delete("/:id", async function (req, res) {
-  const connection = await pendingConnection;
-  connection.collection("items").updateOne(
-    { name: req.params.id },
-    {
-      $set: {
-        deleted: true,
-        deleteComment: req.body.deleteComment,
       },
     },
     (err, result) => standardReply(res, err, result)

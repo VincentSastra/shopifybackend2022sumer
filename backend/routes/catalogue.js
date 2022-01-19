@@ -2,11 +2,19 @@ var express = require("express");
 const { pendingConnection } = require("../util/db");
 var router = express.Router();
 
+const standardReply = (res, err, result) => {
+  if (err) {
+    res.status(400).send(err.message);
+  } else {
+    res.send(200);
+  }
+};
+
 router.get("/list", async function (req, res) {
   const connection = await pendingConnection;
   connection
     .collection("items")
-    .find({ deleted: false })
+    .find({ $or: [{ deleted: false }, { deleted: { $exists: false } }] })
     .limit(50)
     .toArray(function (err, result) {
       if (err) {
@@ -17,7 +25,7 @@ router.get("/list", async function (req, res) {
     });
 });
 
-router.get("deleted", async function (req, res) {
+router.get("/deleted", async function (req, res) {
   const connection = await pendingConnection;
   connection
     .collection("items")
@@ -32,7 +40,7 @@ router.get("deleted", async function (req, res) {
     });
 });
 
-router.post("restore/:id", async function (req, res) {
+router.post("/restore/:id", async function (req, res) {
   const connection = await pendingConnection;
   connection.collection("items").updateOne(
     { name: req.params.id },
@@ -40,7 +48,24 @@ router.post("restore/:id", async function (req, res) {
       $set: {
         deleted: false,
       },
-      $unset: "deleteComment",
+      $unset: {
+        deletedComment: 1,
+      },
+    },
+    (err, result) => standardReply(res, err, result)
+  );
+});
+
+router.post("/delete/:id", async function (req, res) {
+  const connection = await pendingConnection;
+  console.log(req.body);
+  connection.collection("items").updateOne(
+    { name: req.params.id },
+    {
+      $set: {
+        deleted: true,
+        deleteComment: req.body.deleteComment,
+      },
     },
     (err, result) => standardReply(res, err, result)
   );
