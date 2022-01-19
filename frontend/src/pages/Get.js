@@ -21,5 +21,7 @@ export const Get = () => {
 		{JSON.stringify(data)}
 		<br />
 		<Link to={`/update/${name}`}>Update</Link>
+		<br />
+		<Link to={`/delete/${name}`}>Delete</Link>
 	</div>
 }
