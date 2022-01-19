@@ -5,6 +5,25 @@ Project is build using Express Node.js
 Go to http://shopifyui.vincentsastra.com to view the UI (hosted on GithubPages)  
 Go to http://shopify.vincentsastra.com to interact with the backend server directly (hosted on Azure VM)
 
+### Backend Endpoints
+http://shopify.vincentsastra.com/catalogue/list  
+* GET: Lists all of the items  
+
+http://shopify.vincentsastra.com/catalogue/deleted/list  
+* GET: Lists all of the deleted items  
+
+http://shopify.vincentsastra.com/items/:name  
+* GET: Retrieve the item information of a specific name  
+* PUT: Create a new item with its information. Name must not be a duplicate
+* PATCH: Update an existing item with new information. An existing item with that name must already exists  
+
+http://shopify.vincentsastra.com/catalogue/delete/:name
+* POST: Delete an item with that name. Can include a deleteComment in its body.
+* This is a POST request because the resource is not deleted from the DB
+
+http://shopify.vincentsastra.com/catalogue/restore/:name
+* POST: Restore a deleted item from the deleted list.  
+
 ## Local Installation
 1. Install Node.JS
 Follow the steps here and install NodeJS 14 or later
